@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "aleksandr-strulkov-course work4"
+version = "0.1.0"
+description = ""
+authors = ["AleksandrStrulkov <astrulkov@yandex.ru>"]
+readme = "README.md"
+packages = [{include = "aleksandr_strulkov_course work4"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
