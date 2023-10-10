@@ -1,6 +1,6 @@
 import copy
 from src.class_api import HeadHunter_API, SuperJob_API
-from src.class_mylist import Mylist
+# from src.class_mylist import Mylist
 
 
 class UserInput:
