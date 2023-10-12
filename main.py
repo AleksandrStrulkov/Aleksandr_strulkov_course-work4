@@ -14,6 +14,7 @@ if __name__ == '__main__':
 	# data = sj_api.get_vacancies()
 	# pprint(data, indent=4)
 	# pprint(len(data))
+
 	# user_input = UserInput()
 	# pprint(user_input, indent=2)
 	user_input = UserInput()
