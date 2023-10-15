@@ -47,6 +47,7 @@ class HeadHunter_API(API):
 		"""Получение всех вакансий выбранного города по профессии"""
 		hh_vac_url = self.HH_URL
 		params = {
+				"only_with_salary": True,
 				"text": self.prof_name,
 				"per_page": 100,
 				"area": self.get_city_id()
@@ -56,8 +57,6 @@ class HeadHunter_API(API):
 		if response.status_code == 200:
 			vacancies = response.json()
 			return vacancies["items"]
-
-
 
 class SuperJob_API(API):
 	"""Получение вакансий с платформы SuperJob API"""
