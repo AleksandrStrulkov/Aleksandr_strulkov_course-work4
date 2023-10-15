@@ -1,3 +1,7 @@
+import datetime
+import arrow
+
+
 class Vacancy:
 	def __init__(self, vacancy_info: dict):
 		self.vacancy_info = vacancy_info
@@ -8,9 +12,13 @@ class Vacancy:
 		for vacancy in self.vacancy_info:
 			if isinstance(vacancy["id"], str) and vacancy["id"].isdigit():
 				vacancy_id = vacancy["id"]
+			else:
+				vacancy_id = False
 
 			if isinstance(vacancy["name"], str):
 				vacancy_name = vacancy["name"]
+			else:
+				vacancy_name = False
 
 			if vacancy['salary']['from'] is not None and isinstance(vacancy['salary']['from'], int):
 				vacancy_salary_from = vacancy['salary']['from']
@@ -26,23 +34,37 @@ class Vacancy:
 
 			if isinstance(vacancy['area']['name'], str):
 				vacancy_area = vacancy['area']['name']
+			else:
+				vacancy_area = False
 
 			if "https://" in vacancy["alternate_url"]:
 				vacancy_url = vacancy["alternate_url"]
+			else:
+				vacancy_url = False
 
 			if isinstance(vacancy["schedule"]["name"], str):
 				vacancy_schedule = vacancy["schedule"]["name"]
+			else:
+				vacancy_schedule = False
 
 			if isinstance(vacancy['experience']['name'], str):
 				vacancy_experience = vacancy['experience']['name']
+			else:
+				vacancy_experience = False
 
-			if (vacancy_id and vacancy_name
-				and vacancy_salary_from
-				and vacancy_salary_to
-				and vacancy_area
-				and vacancy_url
-				and vacancy_schedule
-				and vacancy_experience):
+			if isinstance(vacancy['published_at'], str):
+				vacancy_published_at = vacancy['published_at']
+			else:
+				vacancy_published_at = False
+
+			if (vacancy_id or vacancy_name
+					or vacancy_salary_from
+					or vacancy_salary_to
+					or vacancy_area
+					or vacancy_url
+					or vacancy_schedule
+					or vacancy_experience
+					or vacancy_published_at):
 				hh_valid_vacancy.append(vacancy)
 
 		return hh_valid_vacancy
@@ -50,9 +72,12 @@ class Vacancy:
 	def readable_view_vacancy_hh(self):
 		"""Метод преобразования в читаемый вид вакансий с платформы HeadHunter"""
 		hh_vacancy_readable = []
+
 		for vacancy in self.vacancy_valid_hh():
+			date_time_obj = datetime.datetime.strptime(vacancy['published_at'], '%Y-%m-%dT%H:%M:%S+%f')
 			vacancies_items = {
 					"id вакансии": vacancy['id'],
+					"Дата публикации": date_time_obj.date(),
 					"Наименование вакансии": vacancy['name'],
 					"Минимальная зарплата": vacancy['salary']['from'],
 					"Максимальная зарплата": vacancy['salary']['to'],
@@ -63,6 +88,86 @@ class Vacancy:
 			}
 			hh_vacancy_readable.append(vacancies_items)
 		return hh_vacancy_readable
+
+	def vacancy_valid_sj(self):
+		"""Валидация данных с вакансий с платформы SuperJob"""
+		sj_valid_vacancy = []
+		for vacancy in self.vacancy_info:
+			if isinstance(vacancy["id"], int) or vacancy["id"] is not None:
+				vacancy_id = vacancy["id"]
+			else:
+				vacancy_id = False
+
+			if isinstance(vacancy["profession"], str) or vacancy["profession"] is not None:
+				vacancy_name = vacancy["profession"]
+			else:
+				vacancy_name = False
+
+			if vacancy['payment_from'] is not None or isinstance(vacancy["payment_from"], int):
+				vacancy_salary_from = vacancy['payment_from']
+			else:
+				vacancy_salary_from = False
+
+			if vacancy['payment_to'] is not None or isinstance(vacancy["payment_to"], int):
+				vacancy_salary_to = vacancy['payment_to']
+			else:
+				vacancy_salary_to = False
+
+			if isinstance(vacancy['town']['title'], str) or vacancy['town']['title'] is not None :
+				vacancy_area = vacancy['town']['title']
+			else:
+				vacancy_area = False
+
+			if "https://" in vacancy["link"]:
+				vacancy_url = vacancy["link"]
+			else:
+				vacancy_url = False
+
+			if isinstance(vacancy["type_of_work"]["title"], str) or vacancy["type_of_work"]["title"] is not None:
+				vacancy_schedule = vacancy["type_of_work"]["title"]
+			else:
+				vacancy_schedule = False
+
+			if isinstance(vacancy['experience']['title'], str) or vacancy['experience']['title'] is not None:
+				vacancy_experience = vacancy['experience']['title']
+			else:
+				vacancy_experience = False
+
+			if isinstance(vacancy['date_published'], int) or vacancy['date_published'] is not None:
+				vacancy_data_published = vacancy['date_published']
+			else:
+				vacancy_data_published = False
+
+			if (vacancy_id or vacancy_name
+					or vacancy_salary_from
+					or vacancy_salary_to
+					or vacancy_area
+					or vacancy_url
+					or vacancy_schedule
+					or vacancy_experience
+					or vacancy_data_published):
+				sj_valid_vacancy.append(vacancy)
+
+		return sj_valid_vacancy
+
+	def readable_view_vacancy_sj(self):
+		"""Метод преобразования в читаемый вид вакансий с платформы SuperJob"""
+		sj_vacancy_readable = []
+		for vacancy in self.vacancy_valid_sj():
+			vacancies_items = {
+					"id вакансии": vacancy['id'],
+					"Дата публикации": datetime.datetime.fromtimestamp(vacancy['date_published'])
+					.strftime('%Y-%m-%d %H:%M:%S'),
+					"Наименование вакансии": vacancy['profession'],
+					"Минимальная зарплата": vacancy['payment_from'],
+					"Максимальная зарплата": vacancy['payment_to'],
+					"Город": vacancy['town']['title'],
+					"Ссылка на вакансию": vacancy['link'],
+					"Расписание работы": vacancy["type_of_work"]["title"],
+					"Опыт работы": vacancy['experience']['title']
+			}
+			sj_vacancy_readable.append(vacancies_items)
+		return sj_vacancy_readable
 
 	def get_vacancies_items(self):
 		return self.vacancy_info
