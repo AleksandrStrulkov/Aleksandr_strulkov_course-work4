@@ -9,6 +9,7 @@ packages = [{include = "aleksandr_strulkov_course work4"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.31.0"
+arrow = "^1.3.0"
 
 
 [build-system]
