@@ -23,13 +23,13 @@ class Vacancy:
 			if vacancy['salary']['from'] is not None and isinstance(vacancy['salary']['from'], int):
 				vacancy_salary_from = vacancy['salary']['from']
 			else:
-				vacancy['salary']['from'] = "Информация отсутствует"
+				vacancy['salary']['from'] = 0
 				vacancy_salary_from = vacancy['salary']['from']
 
 			if vacancy['salary']['to'] is not None and isinstance(vacancy['salary']['to'], int):
 				vacancy_salary_to = vacancy['salary']['to']
 			else:
-				vacancy['salary']['to'] = "Информация отсутствует"
+				vacancy['salary']['to'] = 0
 				vacancy_salary_to = vacancy['salary']['to']
 
 			if isinstance(vacancy['area']['name'], str):
@@ -52,19 +52,13 @@ class Vacancy:
 			else:
 				vacancy_experience = False
 
-			if isinstance(vacancy['published_at'], str):
-				vacancy_published_at = vacancy['published_at']
-			else:
-				vacancy_published_at = False
-
 			if (vacancy_id or vacancy_name
 					or vacancy_salary_from
 					or vacancy_salary_to
 					or vacancy_area
 					or vacancy_url
 					or vacancy_schedule
-					or vacancy_experience
-					or vacancy_published_at):
+					or vacancy_experience):
 				hh_valid_vacancy.append(vacancy)
 
 		return hh_valid_vacancy
@@ -74,10 +68,8 @@ class Vacancy:
 		hh_vacancy_readable = []
 
 		for vacancy in self.vacancy_valid_hh():
-			date_time_obj = datetime.datetime.strptime(vacancy['published_at'], '%Y-%m-%dT%H:%M:%S+%f')
 			vacancies_items = {
 					"id вакансии": vacancy['id'],
-					"Дата публикации": date_time_obj.date(),
 					"Наименование вакансии": vacancy['name'],
 					"Минимальная зарплата": vacancy['salary']['from'],
 					"Максимальная зарплата": vacancy['salary']['to'],
@@ -88,6 +80,13 @@ class Vacancy:
 			}
 			hh_vacancy_readable.append(vacancies_items)
 		return hh_vacancy_readable
+
+	def сomparison_vacancies_sj(self, first_num, second_num):
+		"""Метод сравнения вакансий по минимальной зарплате"""
+		salary_one = self.readable_view_vacancy_hh()[first_num - 1]["Минимальная зарплата"]
+		salary_two = self.readable_view_vacancy_hh()[second_num - 1]["Минимальная зарплата"]
+
+		return salary_one >= salary_two
 
 	def vacancy_valid_sj(self):
 		"""Валидация данных с вакансий с платформы SuperJob"""
@@ -133,19 +132,13 @@ class Vacancy:
 			else:
 				vacancy_experience = False
 
-			if isinstance(vacancy['date_published'], int) or vacancy['date_published'] is not None:
-				vacancy_data_published = vacancy['date_published']
-			else:
-				vacancy_data_published = False
-
 			if (vacancy_id or vacancy_name
 					or vacancy_salary_from
 					or vacancy_salary_to
 					or vacancy_area
 					or vacancy_url
 					or vacancy_schedule
-					or vacancy_experience
-					or vacancy_data_published):
+					or vacancy_experience):
 				sj_valid_vacancy.append(vacancy)
 
 		return sj_valid_vacancy
@@ -156,8 +149,6 @@ class Vacancy:
 		for vacancy in self.vacancy_valid_sj():
 			vacancies_items = {
 					"id вакансии": vacancy['id'],
-					"Дата публикации": datetime.datetime.fromtimestamp(vacancy['date_published'])
-					.strftime('%Y-%m-%d %H:%M:%S'),
 					"Наименование вакансии": vacancy['profession'],
 					"Минимальная зарплата": vacancy['payment_from'],
 					"Максимальная зарплата": vacancy['payment_to'],
@@ -169,5 +160,11 @@ class Vacancy:
 			sj_vacancy_readable.append(vacancies_items)
 		return sj_vacancy_readable
 
-	def get_vacancies_items(self):
-		return self.vacancy_info
+	def сomparison_vacancies_sj(self, first_num, second_num):
+		"""Метод сравнения вакансий по минимальной зарплате"""
+		salary_one = self.readable_view_vacancy_sj()[first_num - 1]["Минимальная зарплата"]
+		salary_two = self.readable_view_vacancy_sj()[second_num - 1]["Минимальная зарплата"]
+
+		return salary_one >= salary_two
+
+
