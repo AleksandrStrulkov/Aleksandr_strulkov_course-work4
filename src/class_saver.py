@@ -29,9 +29,10 @@ class JSONSaver(Saver):
 		self.vacancies = vacancies
 
 	def saver_vacancies(self):
-		"""Метод для добавления всех вакансий в файл"""
-		with open(FILE_ALL_FAVORITE, "w", encoding="utf-8") as file:
+		"""Метод для добавления вакансий в файл"""
+		with open(FILE_ALL_VACANCY, "w", encoding="utf-8") as file:
 			json.dump(self.vacancies, file, indent=4, ensure_ascii=False)
+
 
 	def getter_vacancies(self):
 		"""Метод получения данных из файла"""
@@ -83,9 +84,11 @@ class JSONSaver(Saver):
 		for item in self.vacancies:
 			if item['id вакансии'] == id_favorite:
 				experience_user.append(item)
-			with open(FILE_ALL_FAVORITE, "w", encoding="utf-8") as file:
-				json.dump(experience_user, file, indent=4, ensure_ascii=False)
+			with open(FILE_ALL_FAVORITE, "w", encoding="utf-8") as outfile:
+				json.dump(experience_user, outfile, indent=4, ensure_ascii=False)
 
+
+	@staticmethod
 	def getter_vacancies_favorite(self):
 		"""Метод получения данных из файла избранного"""
 		with open(FILE_ALL_FAVORITE, "r", encoding="utf-8") as file:
@@ -94,7 +97,7 @@ class JSONSaver(Saver):
 
 	@classmethod
 	def delete_vacancies_favorite(cls):
-		"""Метод удаления данных из файла"""
+		"""Метод удаления данных из файла избранного"""
 		with open(FILE_ALL_FAVORITE, "w+") as file:
 			file.seek(0)
 			file.truncate()
