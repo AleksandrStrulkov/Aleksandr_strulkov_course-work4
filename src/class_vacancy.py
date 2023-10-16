@@ -15,8 +15,8 @@ class Vacancy:
 			else:
 				vacancy_id = False
 
-			if isinstance(vacancy["name"], str):
-				vacancy_name = vacancy["name"]
+			if isinstance(vacancy['name'], str):
+				vacancy_name = vacancy['name']
 			else:
 				vacancy_name = False
 
@@ -74,7 +74,7 @@ class Vacancy:
 					"Минимальная зарплата": vacancy['salary']['from'],
 					"Максимальная зарплата": vacancy['salary']['to'],
 					"Город": vacancy['area']['name'],
-					"Ссылка на вакансию": vacancy['url'],
+					"Ссылка на вакансию": vacancy['alternate_url'],
 					"Расписание работы": vacancy['schedule']['name'],
 					"Опыт работы": vacancy['experience']['name']
 			}
