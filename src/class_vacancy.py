@@ -69,7 +69,7 @@ class Vacancy:
 
 		for vacancy in self.vacancy_valid_hh():
 			vacancies_items = {
-					"id вакансии": vacancy['id'],
+					"id вакансии": int(vacancy['id']),
 					"Наименование вакансии": vacancy['name'],
 					"Минимальная зарплата": vacancy['salary']['from'],
 					"Максимальная зарплата": vacancy['salary']['to'],
