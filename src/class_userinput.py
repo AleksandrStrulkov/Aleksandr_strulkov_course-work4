@@ -1,4 +1,4 @@
-import copy
+from colorama import
 from src.class_api import HeadHunter_API, SuperJob_API
 from src.class_vacancy import Vacancy
 from src.class_saver import JSONSaver
@@ -64,12 +64,12 @@ class UserInput:
 		"""Второй вывод пользователю"""
 		while True:
 			print("<><><><><><><><><><><><><><><><><><>")
-			print("Введите варианты команд\n"
-				  "1 - вывести на экран все найденные вакансии\n"
+			print("Введите варианты команд:\n"
+				  "1 - вывести вакансии на экран\n"
 				  "2 - отфильтровать вакансии по удовлетворяющей заработной плате\n"
 				  "3 - отфильтровать вакансии по расписанию работы\n"
 				  "4 - отфильтровать вакансии по опыту работы\n"
-				  "5 - отфильтровать по всем условиям\n"
+				  "5 - сортировать по минимальной заработной плате\n"
 				  "0 - выйти в начало")
 
 			print("<><><><><><><><><><><><><><><><><><>")
@@ -82,6 +82,7 @@ class UserInput:
 				for item in self.jsonfile_vacancy_instance.getter_vacancies():
 					pprint(item, indent=2)
 					print("<><><><><><><><><><><><><><><><><><>")
+
 			elif user_input == 2:
 				self.vacancy_filtred_salary()
 			elif user_input == 3:
@@ -89,24 +90,77 @@ class UserInput:
 			elif user_input == 4:
 				self.vacancy_filtred_experience()
 			elif user_input == 5:
-				self.vacancy_filtred_all()
+				self.vacancy_filter_salary()
 			else:
 				print("Непонятная команда")
 
 	def vacancy_filtred_salary(self):
-		pass
+		while True:
+			print("<><><><><><><><><><><><><><><><><><>")
+			print("Мы можем отфильтровать найденные вакансии по заработной плате\n")
+			print("<><><><><><><><><><><><><><><><><><>")
+			user_input = int(input("Укажите минимальную оплату по которой готовы трудиться: "))
+			user_salary_min = self.jsonfile_vacancy_instance.get_vacancies_salary_minimum(user_input)
 
+			pprint(user_salary_min, indent=2)
+			print("<><><><><><><><><><><><><><><><><><>")
+
+			break
 	def vacancy_filtred_schedule(self):
-		pass
+		while True:
+			print("<><><><><><><><><><><><><><><><><><>")
+			print("Мы можем отфильтровать найденные вакансии по расписанию работы\n")
+			print("<><><><><><><><><><><><><><><><><><>")
+			user_input = input("Укажите прописью какие возможные условия вас интересуют:\n"
+								   "1 - Полный рабочий день\n"
+								   "2 - Полный день\n"
+								   "3 - Гибкий график\n"
+								   "4 - Удаленная работа"
+								   "5 - Неполный рабочий день\n"
+								   "6 - Сменный график работы\n"
+								   "7 - Неполная дистанционная занятость: ").capitalize()
+			print("<><><><><><><><><><><><><><><><><><>")
+			user_filtred_schedule = self.jsonfile_vacancy_instance.get_vacancies_schedule(user_input)
+
+			pprint(user_filtred_schedule, indent=2)
+			print("<><><><><><><><><><><><><><><><><><>")
+
+			break
 
 	def vacancy_filtred_experience(self):
-		pass
+		while True:
+			print("<><><><><><><><><><><><><><><><><><>")
+			print("Мы можем отфильтровать найденные вакансии по опыту работы\n")
+			print("<><><><><><><><><><><><><><><><><><>")
+			user_input = input(
+				"Укажите прописью какой у вас опыт работы и на каких условиях готовы\n"
+				"отозваться на вакансию:\n"
+				"1 - Нет опыта\n"
+				"2 - От 1 года до 3 лет\n"
+				"3 - От 3 до 6 лет\n"
+				"4 - От 1 года"
+				"5 - От 3 лет\n"
+				"6 - Без опыта\n").capitalize()
+			print("<><><><><><><><><><><><><><><><><><>")
+			user_filtred_experience = self.jsonfile_vacancy_instance.get_vacancies_experience(user_input)
 
-	def vacancy_filtred_all(self):
-		pass
+			pprint(user_filtred_experience, indent=2)
+			print("<><><><><><><><><><><><><><><><><><>")
 
-	def output_format(self):
-		pass
+			break
+
+	def vacancy_filter_salary(self):
+		while True:
+			print("<><><><><><><><><><><><><><><><><><>")
+			print("Выполняем сортировку по заработной плате всех вакансий по убыванию")
+
+			vac_filter_sal = self.jsonfile_vacancy_instance.get_vacancies_sorted()
+			pprint(vac_filter_sal, indent=2)
+			print("<><><><><><><><><><><><><><><><><><>")
+			break
+
+	# def output_format(self):
+	# 	pass
 
 
 
