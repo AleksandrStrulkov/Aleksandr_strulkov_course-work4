@@ -1,8 +1,6 @@
-import datetime
-import arrow
-
 
 class Vacancy:
+	"""Класс принимает все найденные вакансии"""
 	def __init__(self, vacancy_info: dict):
 		self.vacancy_info = vacancy_info
 
@@ -75,18 +73,11 @@ class Vacancy:
 					"Максимальная зарплата": vacancy['salary']['to'],
 					"Город": vacancy['area']['name'],
 					"Ссылка на вакансию": vacancy['alternate_url'],
-					"Расписание работы": vacancy['schedule']['name'],
+					"График работы": vacancy['schedule']['name'],
 					"Опыт работы": vacancy['experience']['name']
 			}
 			hh_vacancy_readable.append(vacancies_items)
 		return hh_vacancy_readable
-
-	def сomparison_vacancies_sj(self, first_num, second_num):
-		"""Метод сравнения вакансий по минимальной зарплате"""
-		salary_one = self.readable_view_vacancy_hh()[first_num - 1]["Минимальная зарплата"]
-		salary_two = self.readable_view_vacancy_hh()[second_num - 1]["Минимальная зарплата"]
-
-		return salary_one >= salary_two
 
 	def vacancy_valid_sj(self):
 		"""Валидация данных с вакансий с платформы SuperJob"""
@@ -154,17 +145,11 @@ class Vacancy:
 					"Максимальная зарплата": vacancy['payment_to'],
 					"Город": vacancy['town']['title'],
 					"Ссылка на вакансию": vacancy['link'],
-					"Расписание работы": vacancy["type_of_work"]["title"],
+					"График работы": vacancy["type_of_work"]["title"],
 					"Опыт работы": vacancy['experience']['title']
 			}
 			sj_vacancy_readable.append(vacancies_items)
 		return sj_vacancy_readable
 
-	def сomparison_vacancies_sj(self, first_num, second_num):
-		"""Метод сравнения вакансий по минимальной зарплате"""
-		salary_one = self.readable_view_vacancy_sj()[first_num - 1]["Минимальная зарплата"]
-		salary_two = self.readable_view_vacancy_sj()[second_num - 1]["Минимальная зарплата"]
-
-		return salary_one >= salary_two
 
 

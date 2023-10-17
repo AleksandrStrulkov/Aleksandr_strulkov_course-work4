@@ -58,6 +58,7 @@ class HeadHunter_API(API):
 			vacancies = response.json()
 			return vacancies["items"]
 
+
 class SuperJob_API(API):
 	"""Получение вакансий с платформы SuperJob API"""
 	SJ_URL = "https://api.superjob.ru/2.0/vacancies"
@@ -85,8 +86,8 @@ class SuperJob_API(API):
 		}
 
 		headers = {'Hosts': 'api.superjob.ru',
-				'X-API-APP-id': self.SJ_TOKEN
-				}
+				   'X-API-APP-id': self.SJ_TOKEN
+				   }
 
 		response = requests.get(hh_vac_url, params=params, headers=headers)
 

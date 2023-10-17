@@ -1,8 +1,10 @@
 import json
 from abc import ABC, abstractmethod
 from operator import itemgetter
+
 FILE_ALL_VACANCY = "./data/vacancies_all.json"
-FILE_ALL_FAVORITE = "./data/vacancies_favorite.json"
+
+
 
 class Saver(ABC):
 	@abstractmethod
@@ -31,8 +33,7 @@ class JSONSaver(Saver):
 	def saver_vacancies(self):
 		"""Метод для добавления вакансий в файл"""
 		with open(FILE_ALL_VACANCY, "w", encoding="utf-8") as file:
-			json.dump(self.vacancies, file, indent=4, ensure_ascii=False)
-
+			json.dump(self.vacancies, file, indent=2, ensure_ascii=False)
 
 	def getter_vacancies(self):
 		"""Метод получения данных из файла"""
@@ -49,7 +50,6 @@ class JSONSaver(Saver):
 
 	def get_vacancies_salary_minimum(self, salary):
 		"""Метод получения вакансий по минимальной заработной плате"""
-		# file = self.getter_vacancies
 		salary_min = []
 		for item in self.getter_vacancies():
 			if item['Минимальная зарплата'] >= salary:
@@ -62,7 +62,7 @@ class JSONSaver(Saver):
 		"""Метод получения вакансий по условиям графика работы"""
 		schedule_user = []
 		for item in self.getter_vacancies():
-			if item['Расписание работы'] == schedule:
+			if item['График работы'] == schedule:
 				schedule_user.append(item)
 		return schedule_user
 
@@ -77,35 +77,3 @@ class JSONSaver(Saver):
 	def get_vacancies_sorted(self):
 		"""Сортировка вакансий по заработной плате"""
 		return sorted(self.getter_vacancies(), key=itemgetter('Минимальная зарплата'), reverse=True)
-
-	def saver_vacancies_favorite(self, id_favorite):
-		"""Метод для добавления вакансий в избранное"""
-		experience_user = []
-		for item in self.vacancies:
-			if item['id вакансии'] == id_favorite:
-				experience_user.append(item)
-			with open(FILE_ALL_FAVORITE, "w", encoding="utf-8") as outfile:
-				json.dump(experience_user, outfile, indent=4, ensure_ascii=False)
-
-
-	@staticmethod
-	def getter_vacancies_favorite(self):
-		"""Метод получения данных из файла избранного"""
-		with open(FILE_ALL_FAVORITE, "r", encoding="utf-8") as file:
-			vacancy = json.load(file)
-			return vacancy
-
-	@classmethod
-	def delete_vacancies_favorite(cls):
-		"""Метод удаления данных из файла избранного"""
-		with open(FILE_ALL_FAVORITE, "w+") as file:
-			file.seek(0)
-			file.truncate()
-
-
-class CLSSaver(Saver):
-	pass
-
-
-class XLSXSaver(Saver):
-	pass
