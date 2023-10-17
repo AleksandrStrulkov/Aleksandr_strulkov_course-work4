@@ -31,12 +31,12 @@ class UserInput:
 		all_vacancies = hh_platform_instance + sj_platform_instance
 		jsonfile_vacancy_instance = JSONSaver(all_vacancies)
 		saver_file_json = jsonfile_vacancy_instance.saver_vacancies()
-		if len(hh_platform_instance) > 0:
+		if len(hh_platform_instance) or len(sj_platform_instance) > 0:
 			print("<><><><><><><><><><><><><><><><><><>")
 			print(f'На платформе Headhunter найдено {len(hh_platform_instance)} вакансий!')
 			print(f'На платформе SuperJob найдено {len(sj_platform_instance)} вакансий!')
 			print("<><><><><><><><><><><><><><><><><><>")
-		return JSONSaver(all_vacancies)
+		return jsonfile_vacancy_instance
 
 	def __call__(self):
 		"""Первый вывод пользователю"""
