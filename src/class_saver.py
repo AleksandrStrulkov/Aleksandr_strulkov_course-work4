@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from operator import itemgetter
 
 FILE_ALL_VACANCY = "./data/vacancies_all.json"
-
+FILE_ALL_FAVORITE = "./data/vacancies_favorite.json"
 
 
 class Saver(ABC):
@@ -77,3 +77,28 @@ class JSONSaver(Saver):
 	def get_vacancies_sorted(self):
 		"""Сортировка вакансий по заработной плате"""
 		return sorted(self.getter_vacancies(), key=itemgetter('Минимальная зарплата'), reverse=True)
+
+	# @staticmethod
+	def add_vacancies_favorite(self, id_favorite):
+		"""Метод для добавления вакансий в избранное"""
+		for item in self.getter_vacancies():
+			if item['id вакансии'] == id_favorite:
+				data = json.load(open(FILE_ALL_FAVORITE))
+				data.append(item)
+				with open(FILE_ALL_FAVORITE, "w") as file:
+					json.dump(data, file, indent=2, ensure_ascii=False)
+
+	def getter_vacancies_favorite(self):
+		"""Метод получения данных из файла избранного"""
+		with open(FILE_ALL_FAVORITE, "r") as file:
+			vacancy = json.load(file)
+			return vacancy
+
+	@classmethod
+	def delete_vacancies_favorite(cls):
+		"""Метод удаления данных из файла избранного"""
+		with open(FILE_ALL_FAVORITE, "w") as file:
+			json.dump([], file, indent=4, sort_keys=True)
+
+
+
