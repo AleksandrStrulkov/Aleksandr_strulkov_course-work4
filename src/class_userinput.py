@@ -49,6 +49,8 @@ class UserInput:
 			print(
 					"Введите варианты команд:\n"
 					"1 - Анализ вакансий\n"
+					"2 - Вывести на экран список избранных вакансий\n"
+					"3 - Очистить список избранных вакансий\n"
 					"0 - Выход"
 			)
 
@@ -61,25 +63,29 @@ class UserInput:
 			elif user_input == 1:
 				self.select_parameters()
 			elif user_input == 2:
-				if self.favorite_list:
-					print(self.favorite_list)
-				print("Список избранного пуст!")
+				getter_vac_fav = self.jsonfile_vacancy_instance.getter_vacancies_favorite()
+				if self.jsonfile_vacancy_instance.getter_vacancies_favorite():
+					for item in getter_vac_fav:
+						pprint(item, indent=2)
+						print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
+			elif user_input == 3:
+				self.jsonfile_vacancy_instance.delete_vacancies_favorite()
 			else:
 				print("Непонятная команда")
 				continue
 
 	def select_parameters(self):
-		"""Второй вывод пользователю"""
+		"""Основной вывод пользователю"""
 		while True:
 			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
 			print(
 					"Введите варианты команд:\n"
-					"1 - вывести вакансии на экран\n"
-					"2 - отфильтровать вакансии по минимальной заработной плате\n"
-					"3 - отфильтровать вакансии по расписанию работы\n"
-					"4 - отфильтровать вакансии по опыту работы\n"
-					"5 - сортировать по минимальной заработной плате\n"
-					"0 - выйти в начало"
+					"1 - Вывести вакансии на экран\n"
+					"2 - Отфильтровать вакансии по минимальной заработной плате\n"
+					"3 - Отфильтровать вакансии по расписанию работы\n"
+					"4 - Отфильтровать вакансии по опыту работы\n"
+					"5 - Сортировать по минимальной заработной плате\n"
+					"0 - Выйти в начальное меню"
 			)
 
 			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
@@ -114,18 +120,69 @@ class UserInput:
 			)
 
 			user_input = int(input("Укажите минимальную оплату по которой готовы трудиться: "))
-			user_salary_min = self.jsonfile_vacancy_instance.get_vacancies_salary_minimum(user_input)
+			user_salary_min = self.jsonfile_vacancy_instance.get_vacancies_salary_minimum \
+				(user_input)
 
 			for item in user_salary_min:
 				pprint(item, indent=2)
 				print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
+
+			print(
+					"Мы можем записать вакансию в избранное\n"
+					"1 - Записать\n"
+					"0 - Нет\n"
+			)
+			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
+			user_input_yes_no = int(input("Укажите значение: "))
+
+			if user_input_yes_no == 0:
+				break
+			if user_input_yes_no == 1:
+				self.record_vacancy_favorite()
+			else:
+				break
+
+	def record_vacancy_favorite(self):
+
+		while True:
+			user_id__vacancy_input = int(input("Укажите id выбранной вакансии: "))
+			user_record_vacancy_favorite = self.jsonfile_vacancy_instance.add_vacancies_favorite \
+					(user_id__vacancy_input)
+			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
 			break
+
+		while True:
+			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
+			user_input = int(
+					input(
+							"Укажите следующие значения:\n"
+							"0 - Выйти  в меню выбора города и профессии\n"
+							"1 - Выйти в первое меню\n"
+							"2 - Выйти во второе меню\n"
+							"3 - Продолжить запись в избранное\n"
+					)
+			)
+			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
+
+			if user_input == 0:
+				self.output_vacancy()
+
+			elif user_input == 1:
+				self.__call__()
+
+			elif user_input == 2:
+				self.select_parameters()
+
+			elif user_input == 3:
+				self.record_vacancy_favorite()
+
+			else:
+				print("Непонятная команда")
+				continue
 
 	def vacancy_filtred_schedule(self):
 		"""Метод фильтрации вакансий по графику работы"""
 		while True:
-			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
-			print("Мы можем отфильтровать найденные вакансии по графику работы\n")
 			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
 			user_input = int(
 					input(
@@ -136,12 +193,16 @@ class UserInput:
 							"4 - Неполный рабочий день\n"
 							"5 - Сменный график работы\n"
 							"6 - Вахтовый метод:\n"
+							"0 - Выйти\n"
 					)
 			)
 			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
-			user_filtred_schedule = self.jsonfile_vacancy_instance.get_vacancies_schedule(user_input)
+			user_filtred_schedule = self.jsonfile_vacancy_instance.get_vacancies_schedule \
+				(user_input)
 
-			if user_input == 1:
+			if user_input == 0:
+				break
+			elif user_input == 1:
 				user_filtred_schedule = self.jsonfile_vacancy_instance.get_vacancies_schedule \
 					("Полный рабочий день" or "Полный день")
 			elif user_input == 2:
@@ -166,10 +227,24 @@ class UserInput:
 			for item in user_filtred_schedule:
 				pprint(item, indent=2)
 				print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
-			break
+
+			print(
+					"Мы можем записать вакансию в избранное, укажите ее id ниже в поле\n"
+					"1 - Записать\n"
+					"0 - Нет\n"
+			)
+			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
+			user_input_yes_no = int(input("Укажите значение: "))
+
+			if user_input_yes_no == 0:
+				break
+			if user_input_yes_no == 1:
+				self.record_vacancy_favorite()
+			else:
+				break
 
 	def vacancy_filtred_experience(self):
-		"""Метод финтрации вакансий по требуемому опыту работы"""
+		"""Метод фильтрации вакансий по требуемому опыту работы"""
 		while True:
 			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
 			print("Мы можем отфильтровать найденные вакансии по требуемому опыту работы\n")
@@ -185,7 +260,8 @@ class UserInput:
 			)
 
 			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
-			user_filtred_experience = self.jsonfile_vacancy_instance.get_vacancies_experience(user_input)
+			user_filtred_experience = self.jsonfile_vacancy_instance.get_vacancies_experience \
+				(user_input)
 
 			if user_input == 1:
 				user_filtred_experience = self.jsonfile_vacancy_instance.get_vacancies_experience \
@@ -203,7 +279,21 @@ class UserInput:
 			for item in user_filtred_experience:
 				pprint(item, indent=2)
 				print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
-			break
+
+			print(
+					"Мы можем записать вакансию в избранное, укажите ее id ниже в поле\n"
+					"1 - записать\n"
+					"0 - нет\n"
+			)
+			print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
+			user_input_yes_no = int(input("Укажите значение: "))
+
+			if user_input_yes_no == 0:
+				break
+			if user_input_yes_no == 1:
+				self.record_vacancy_favorite()
+			else:
+				break
 
 	def vacancy_filter_salary(self):
 		"""Метод сортировки по заработной плате всех найденных вакансий"""

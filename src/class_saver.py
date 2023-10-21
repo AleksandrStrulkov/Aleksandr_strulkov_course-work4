@@ -35,6 +35,10 @@ class JSONSaver(Saver):
 		with open(FILE_ALL_VACANCY, "w", encoding="utf-8") as file:
 			json.dump(self.vacancies, file, indent=2, ensure_ascii=False)
 
+
+
+
+
 	def getter_vacancies(self):
 		"""Метод получения данных из файла"""
 		with open(FILE_ALL_VACANCY, "r", encoding="utf-8") as file:
